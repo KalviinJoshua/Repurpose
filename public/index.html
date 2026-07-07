@@ -80,6 +80,19 @@
   .error-note{ color:var(--rust); font-family:var(--mono); font-size:12px; }
 
   footer{ margin-top:60px; padding-top:20px; border-top:1px solid var(--paper-deep); font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:0.5px; }
+  #spinner{
+    display:inline-block;
+    animation:spin 0.8s linear infinite;
+    margin-right:8px;
+  }
+  @keyframes spin{
+    from{
+      transform:rotate(0deg);
+    }
+    to{
+      transform:rotate(360deg);
+    }
+    }
 </style>
 </head>
 <body>
@@ -102,6 +115,7 @@
     <p class="voice-hint">Skip this and we'll set it in a plain, confident house style.</p>
 
     <button class="press-btn" id="runBtn" onclick="runPress()">
+      <span id="spinner" style="display:none;">⏳</span>
       <span id="runLabel">Set the type →</span>
     </button>
   </div>
@@ -179,7 +193,8 @@ async function runPress(){
   }
 
   btn.disabled = true;
-  label.innerText = 'Setting the type…';
+  document.getElementById("spinner").style.display="inline-block";
+  label.innerText="Generating...";
 
   const userContent = voice
     ? `Source content:\n${manuscript}\n\nVoice sample to match:\n${voice}`
@@ -209,8 +224,9 @@ async function runPress(){
   });
 
   await Promise.allSettled(jobs);
-  btn.disabled = false;
-  label.innerText = 'Set the type →';
+  btn.disabled=false;
+  document.getElementById("spinner").style.display="none";
+  label.innerText="Set the type →";
 }
 </script>
 </body>
