@@ -58,6 +58,9 @@ app.post("/api/repurpose", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
+console.log("Serving static files from:");
+console.log(path.join(__dirname, "public"));
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
