@@ -39,10 +39,13 @@ AI-powered content repurposing tool that transforms a single manuscript into pla
 
 ![Home](assets/home.png)
 
-### Generated Outputs
+### Generated Content (Part 1)
 
-![Outputs](assets/output.png)
+![Generated Content Part 1](assets/output.png)
 
+### Generated Content (Part 2)
+
+![Generated Content Part 2](assets/output1.png)
 ---
 
 ## Installation
