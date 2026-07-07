@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Repurpose — one manuscript, five proofs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --paper: #ECE7DC;
+    --paper-deep: #CFC7B4;
+    --ink: #22241F;
+    --ink-soft: #55584C;
+    --ink-faint: #8A8B7E;
+    --teal: #1F6B63;
+    --ochre: #C97A2B;
+    --rust: #A63B2E;
+    --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Courier New', monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); padding:0 0 80px; }
+  .wrap{ max-width:920px; margin:0 auto; padding:0 24px; }
+
+  header{ border-bottom:3px solid var(--ink); padding:36px 0 18px; margin-bottom:36px; }
+  .masthead-row{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+  h1{ font-family:var(--serif); font-size:44px; letter-spacing:0.5px; margin:0; font-weight:700; }
+  .issue-tag{ font-family:var(--mono); font-size:12px; letter-spacing:1.5px; color:var(--ink-faint); text-transform:uppercase; border:1px solid var(--ink-faint); padding:4px 10px; }
+  .tagline{ font-family:var(--serif); font-style:italic; color:var(--ink-soft); margin:6px 0 0; font-size:16px; }
+
+  .section-label{ font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .section-label::after{ content:""; flex:1; height:1px; background:var(--ink-faint); opacity:0.5; }
+
+  .manuscript-block{ margin-bottom:48px; }
+  label{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px; }
+  textarea{ width:100%; background:#F5F1E8; border:1.5px solid var(--ink); color:var(--ink); font-family:var(--serif); font-size:15px; line-height:1.6; padding:16px; resize:vertical; border-radius:0; }
+  textarea:focus{ outline:2px solid var(--teal); outline-offset:2px; }
+  #manuscript{ min-height:200px; margin-bottom:20px; }
+  #voice{ min-height:70px; margin-bottom:24px; font-size:13px; }
+  .voice-hint{ font-family:var(--sans); font-size:12px; color:var(--ink-faint); margin:-18px 0 24px; }
+
+  .press-btn{ font-family:var(--mono); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; background:var(--ink); color:var(--paper); border:none; padding:14px 28px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:background 0.15s ease; }
+  .press-btn:hover{ background:var(--teal); }
+  .press-btn:disabled{ background:var(--ink-faint); cursor:wait; }
+  .press-btn:focus-visible{ outline:2px solid var(--ochre); outline-offset:3px; }
+
+  .proofs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:640px){ .proofs-grid{ grid-template-columns:1fr; } }
+
+  .proof{ background:#F5F1E8; border:1.5px solid var(--ink); padding:20px; position:relative; min-height:150px; }
+  .stamp{ position:absolute; top:14px; right:16px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--teal); border:1px solid var(--teal); padding:3px 8px; transform:rotate(2deg); text-transform:uppercase; }
+  .proof-title{ font-family:var(--serif); font-size:19px; font-weight:700; margin:0 0 4px; padding-right:90px; }
+  .proof-sub{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
+  .proof-body{ font-size:14px; line-height:1.65; white-space:pre-wrap; color:var(--ink); min-height:60px; }
+  .proof-body.empty{ color:var(--ink-faint); font-style:italic; }
+  .proof-body.loading{ color:var(--ink-faint); }
+  .proof-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:10px; border-top:1px dashed var(--paper-deep); }
+  .copy-btn{ font-family:var(--mono); font-size:10px; letter-spacing:1px; text-transform:uppercase; background:none; border:1px solid var(--ink); color:var(--ink); padding:5px 10px; cursor:pointer; }
+  .copy-btn:hover{ background:var(--ink); color:var(--paper); }
+  .copy-btn:focus-visible{ outline:2px solid var(--ochre); outline-offset:2px; }
+  .proof-count{ font-family:var(--mono); font-size:10px; color:var(--ink-faint); }
+  .error-note{ color:var(--rust); font-family:var(--mono); font-size:12px; }
+
+  footer{ margin-top:60px; padding-top:20px; border-top:1px solid var(--paper-deep); font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:0.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="masthead-row">
+      <h1>REPURPOSE</h1>
+      <span class="issue-tag">Vol. I — Ed. 1</span>
+    </div>
+    <p class="tagline">One manuscript, five proofs, ready before your coffee cools.</p>
+  </header>
+
+  <div class="manuscript-block">
+    <div class="section-label">Manuscript</div>
+    <label for="manuscript">Paste your source content</label>
+    <textarea id="manuscript" placeholder="Drop in a blog post, transcript, or long-form draft…"></textarea>
+
+    <label for="voice">Voice sample (optional)</label>
+    <textarea id="voice" placeholder="Paste 2–3 sentences of your own past writing so the proofs sound like you, not a generic wire report."></textarea>
+    <p class="voice-hint">Skip this and we'll set it in a plain, confident house style.</p>
+
+    <button class="press-btn" id="runBtn" onclick="runPress()">
+      <span id="runLabel">Set the type →</span>
+    </button>
+  </div>
+
+  <div class="section-label">Proofs</div>
+  <div class="proofs-grid" id="proofsGrid"></div>
+
+  <footer>REPURPOSE MVP — running on your own server, your own API key.</footer>
+</div>
+
+<script>
+const FORMATS = [
+  { id: 'linkedin', label: 'LinkedIn Post', sub: 'Proof No. 01 — Feed',
+    system: "You are a sharp social copywriter. Rewrite the given source content as a LinkedIn post: a strong hook in the very first line, 150-200 words total, one clear takeaway, plain confident tone, no hashtag spam, no emoji overload. If a voice sample is provided, match its tone and rhythm closely. Output only the post text, nothing else." },
+  { id: 'thread', label: 'X / Twitter Thread', sub: 'Proof No. 02 — Thread, 3 posts',
+    system: "You are a sharp social copywriter. Rewrite the given source content as a 3-post X/Twitter thread. Number each post like '1/3', '2/3', '3/3'. One idea per post, punchy, no filler, no thread-opener clichés like using a thread emoji. If a voice sample is provided, match its tone. Output only the three numbered posts, nothing else." },
+  { id: 'instagram', label: 'Instagram Caption', sub: 'Proof No. 03 — Caption',
+    system: "You are a sharp social copywriter. Rewrite the given source content as an Instagram caption: 3-5 sentences, warm and direct opening line, minimal emoji (0-2 max), followed by 3-5 relevant hashtags on their own line at the end. If a voice sample is provided, match its tone. Output only the caption, nothing else." },
+  { id: 'newsletter', label: 'Newsletter Blurb', sub: 'Proof No. 04 — Email',
+    system: "You are a sharp newsletter writer. Rewrite the given source content as a short email newsletter blurb: start with a one-line subject suggestion formatted as 'Subject: ...', then a 60-90 word blurb in a casual, information-dense tone that tells the reader what this means for them. If a voice sample is provided, match its tone. Output only the subject line and blurb, nothing else." },
+  { id: 'youtube', label: 'YouTube Description', sub: 'Proof No. 05 — Video',
+    system: "You are a sharp video copywriter. Rewrite the given source content as a YouTube video description: 100-150 words, front-load the key keywords for search, end with one clear call to action to subscribe or comment. If a voice sample is provided, match its tone. Output only the description, nothing else." }
+];
+
+const grid = document.getElementById('proofsGrid');
+FORMATS.forEach(f => {
+  const card = document.createElement('div');
+  card.className = 'proof';
+  card.id = 'card-' + f.id;
+  card.innerHTML = `
+    <div class="stamp">${f.id}</div>
+    <h3 class="proof-title">${f.label}</h3>
+    <div class="proof-sub">${f.sub}</div>
+    <div class="proof-body empty" id="body-${f.id}">Waiting on the manuscript…</div>
+    <div class="proof-footer">
+      <span class="proof-count" id="count-${f.id}"></span>
+      <button class="copy-btn" id="copy-${f.id}" onclick="copyProof('${f.id}')" disabled>Copy</button>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+function copyProof(id){
+  const body = document.getElementById('body-' + id);
+  navigator.clipboard.writeText(body.dataset.raw || body.innerText).then(() => {
+    const btn = document.getElementById('copy-' + id);
+    const old = btn.innerText;
+    btn.innerText = 'Copied';
+    setTimeout(() => { btn.innerText = old; }, 1400);
+  });
+}
+
+async function callBackend(system, content) {
+  const response = await fetch('/api/repurpose', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system, content })
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Request failed');
+  return data.text;
+}
+
+async function runPress(){
+  const manuscript = document.getElementById('manuscript').value.trim();
+  const voice = document.getElementById('voice').value.trim();
+  const btn = document.getElementById('runBtn');
+  const label = document.getElementById('runLabel');
+
+  if (!manuscript){
+    document.getElementById('manuscript').focus();
+    document.getElementById('manuscript').style.outline = '2px solid var(--rust)';
+    setTimeout(() => { document.getElementById('manuscript').style.outline = ''; }, 1200);
+    return;
+  }
+
+  btn.disabled = true;
+  label.innerText = 'Setting the type…';
+
+  const userContent = voice
+    ? `Source content:\n${manuscript}\n\nVoice sample to match:\n${voice}`
+    : `Source content:\n${manuscript}\n\n(No voice sample provided — use a plain, confident house style.)`;
+
+  FORMATS.forEach(f => {
+    const body = document.getElementById('body-' + f.id);
+    body.className = 'proof-body loading';
+    body.innerText = 'Typesetting…';
+    document.getElementById('copy-' + f.id).disabled = true;
+    document.getElementById('count-' + f.id).innerText = '';
+  });
+
+  const jobs = FORMATS.map(async f => {
+    const body = document.getElementById('body-' + f.id);
+    try {
+      const result = await callBackend(f.system, userContent);
+      body.className = 'proof-body';
+      body.innerText = result;
+      body.dataset.raw = result;
+      document.getElementById('copy-' + f.id).disabled = false;
+      document.getElementById('count-' + f.id).innerText = result.length + ' chars';
+    } catch (err) {
+      body.className = 'proof-body error-note';
+      body.innerText = 'Press jammed — ' + err.message;
+    }
+  });
+
+  await Promise.allSettled(jobs);
+  btn.disabled = false;
+  label.innerText = 'Set the type →';
+}
+</script>
+</body>
+</html>

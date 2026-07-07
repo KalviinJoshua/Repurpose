@@ -1,0 +1,14 @@
+{
+  "name": "repurpose-mvp",
+  "version": "1.0.0",
+  "description": "Paste one manuscript, get five platform-ready proofs.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.10.0",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2"
+  }
+}
