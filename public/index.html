@@ -111,6 +111,21 @@
     transform:rotate(360deg);
   }
 }
+/* ---------- Character Counter ---------- */
+
+.char-counter{
+    text-align:right;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-faint);
+    margin-top:6px;
+    margin-bottom:18px;
+}
+
+.char-counter.limit{
+    color:var(--rust);
+    font-weight:bold;
+}
 </style>
 </head>
 <body>
@@ -127,6 +142,9 @@
     <div class="section-label">Manuscript</div>
     <label for="manuscript">Paste your source content</label>
     <textarea id="manuscript" placeholder="Drop in a blog post, transcript, or long-form draft…"></textarea>
+    <div id="charCounter" class="char-counter">
+      Characters: 0 / 10,000
+    </div>
 
     <label for="voice">Voice sample (optional)</label>
     <textarea id="voice" placeholder="Paste 2–3 sentences of your own past writing so the proofs sound like you, not a generic wire report."></textarea>
@@ -196,6 +214,23 @@ async function callBackend(system, content) {
   if (!response.ok) throw new Error(data.error || 'Request failed');
   return data.text;
 }
+
+const manuscriptBox = document.getElementById("manuscript");
+const counter = document.getElementById("charCounter");
+
+manuscriptBox.addEventListener("input", () => {
+
+    const count = manuscriptBox.value.length;
+
+    counter.innerText = `Characters: ${count.toLocaleString()} / 10,000`;
+
+    if(count > 10000){
+        counter.classList.add("limit");
+    }else{
+        counter.classList.remove("limit");
+    }
+
+});
 
 async function runPress(){
   const manuscript = document.getElementById('manuscript').value.trim();
