@@ -9,6 +9,20 @@ const app = express();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/debug", (req, res) => {
+  res.json({
+    dirname: __dirname,
+    publicExists: require("fs").existsSync(path.join(__dirname, "public")),
+    previewExists: require("fs").existsSync(path.join(__dirname, "public", "preview.png")),
+    faviconExists: require("fs").existsSync(path.join(__dirname, "public", "favicon.ico")),
+  });
+});
+
+app.get("/files", (req, res) => {
+  const fs = require("fs");
+  res.json(fs.readdirSync(path.join(__dirname, "public")));
+});
+
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
